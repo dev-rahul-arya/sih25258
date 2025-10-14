@@ -1,0 +1,282 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Training Management - Aapda-Prashikshan</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script src="https://cdn.jsdelivr.net/npm/gsap@3.12.5/dist/gsap.min.js"></script>
+    <link rel="stylesheet" href="assets/css/main.css">
+</head>
+<body>
+    <div class="header">
+        <div class="header-left">
+            <div class="logo-container">
+                <div class="logo">🇮🇳</div>
+                <div>
+                    <div class="app-title">Aapda-Prashikshan</div>
+                    <div class="app-subtitle">NDMA | Ministry of Home Affairs</div>
+                </div>
+            </div>
+        </div>
+        <div class="header-right">
+            <div class="user-info">
+                <div class="user-avatar" id="userAvatar">A</div>
+                <div class="user-details">
+                    <div class="user-name" id="userName">Admin User</div>
+                    <div class="user-role" id="userRole">Administrator</div>
+                </div>
+            </div>
+            <button onclick="logout()" class="btn btn-secondary">Logout</button>
+        </div>
+    </div>
+
+    <div class="sidebar">
+        <a href="dashboard.html" class="nav-link">
+            <span class="nav-icon">📊</span>
+            Dashboard
+        </a>
+        <a href="trainings.html" class="nav-link active">
+            <span class="nav-icon">🎓</span>
+            Training Management
+        </a>
+        <a href="participants.html" class="nav-link">
+            <span class="nav-icon">👥</span>
+            Participant Registry
+        </a>
+        <a href="reports.html" class="nav-link">
+            <span class="nav-icon">📈</span>
+            Reports
+        </a>
+    </div>
+
+    <div class="main-content">
+        <div class="page-header">
+            <h1 class="page-title">Training Program Management</h1>
+            <p class="page-subtitle">Create, manage, and monitor disaster management training programs</p>
+        </div>
+
+        <div class="card" style="margin-bottom: 1.5rem;">
+            <div class="card-body" style="display: flex; gap: 1rem; align-items: center;">
+                <input 
+                    type="text" 
+                    id="searchInput" 
+                    placeholder="Search trainings by name, theme, or state..."
+                    class="form-input"
+                    style="flex: 1;"
+                >
+                <button onclick="openAddModal()" class="btn btn-primary admin-only">
+                    ➕ Add New Training Program
+                </button>
+            </div>
+        </div>
+
+        <div class="card">
+            <div class="card-header">
+                <h3 class="card-title">All Training Programs</h3>
+            </div>
+            <div class="card-body">
+                <div class="table-container">
+                    <table>
+                        <thead>
+                            <tr>
+                                <th>Program ID</th>
+                                <th>Program Name</th>
+                                <th>Theme</th>
+                                <th>State/UT</th>
+                                <th>Start Date</th>
+                                <th>End Date</th>
+                                <th>Status</th>
+                                <th>Actions</th>
+                            </tr>
+                        </thead>
+                        <tbody id="trainingsTable">
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div id="addModal" class="modal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h3 class="modal-title" id="modalTitle">Add New Training Program</h3>
+                <button onclick="closeModal()" class="close-btn">&times;</button>
+            </div>
+            <div class="modal-body">
+                <form id="trainingForm">
+                    <input type="hidden" id="editId">
+                    <div class="form-group">
+                        <label class="form-label">Program Name</label>
+                        <input type="text" id="name" class="form-input" required>
+                    </div>
+                    <div class="form-group">
+                        <label class="form-label">Training Theme</label>
+                        <select id="theme" class="form-select" required></select>
+                    </div>
+                    <div class="form-group">
+                        <label class="form-label">State/UT</label>
+                        <select id="state" class="form-select" required></select>
+                    </div>
+                    <div class="form-group">
+                        <label class="form-label">Start Date</label>
+                        <input type="date" id="startDate" class="form-input" required>
+                    </div>
+                    <div class="form-group">
+                        <label class="form-label">End Date</label>
+                        <input type="date" id="endDate" class="form-input" required>
+                    </div>
+                    <div class="form-group">
+                        <label class="form-label">Status</label>
+                        <select id="status" class="form-select" required>
+                            <option value="Upcoming">Upcoming</option>
+                            <option value="Active">Active</option>
+                            <option value="Completed">Completed</option>
+                        </select>
+                    </div>
+                    <div class="form-group">
+                        <label class="form-label">Number of Participants</label>
+                        <input type="number" id="participants" class="form-input" required>
+                    </div>
+                </form>
+            </div>
+            <div class="modal-footer">
+                <button onclick="closeModal()" class="btn btn-secondary">Cancel</button>
+                <button onclick="saveTraining()" class="btn btn-primary">Save Training</button>
+            </div>
+        </div>
+    </div>
+
+    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+    <script src="assets/js/config.js"></script>
+    <script src="assets/js/auth.js"></script>
+    <script src="assets/js/data.js"></script>
+    <script src="assets/js/main.js"></script>
+    <script>
+        (async () => {
+            await checkAuth();
+        
+        const themeSelect = document.getElementById('theme');
+        TRAINING_THEMES.forEach(theme => {
+            const option = document.createElement('option');
+            option.value = theme;
+            option.textContent = theme;
+            themeSelect.appendChild(option);
+        });
+
+        const stateSelect = document.getElementById('state');
+        STATES_UTS.forEach(state => {
+            const option = document.createElement('option');
+            option.value = state;
+            option.textContent = state;
+            stateSelect.appendChild(option);
+        });
+
+        function loadTrainings() {
+            const trainings = getTrainings();
+            const tableBody = document.getElementById('trainingsTable');
+            tableBody.innerHTML = '';
+
+            trainings.forEach(training => {
+                const row = document.createElement('tr');
+                const statusClass = training.status === 'Active' ? 'badge-success' : 
+                                  training.status === 'Upcoming' ? 'badge-info' : 'badge-warning';
+                row.innerHTML = `
+                    <td>${training.id}</td>
+                    <td>${training.name}</td>
+                    <td>${training.theme}</td>
+                    <td>${training.state}</td>
+                    <td>${formatDate(training.startDate)}</td>
+                    <td>${formatDate(training.endDate)}</td>
+                    <td><span class="badge ${statusClass}">${training.status}</span></td>
+                    <td>
+                        <button onclick="editTraining('${training.id}')" class="btn btn-outline admin-only" style="padding: 0.375rem 0.75rem;">Edit</button>
+                        <button onclick="deleteTrainingItem('${training.id}')" class="btn btn-danger admin-only" style="padding: 0.375rem 0.75rem;">Delete</button>
+                    </td>
+                `;
+                tableBody.appendChild(row);
+            });
+
+            gsap.from('#trainingsTable tr', {
+                opacity: 0,
+                x: -20,
+                stagger: 0.05,
+                duration: 0.4
+            });
+        }
+
+        function openAddModal() {
+            document.getElementById('modalTitle').textContent = 'Add New Training Program';
+            document.getElementById('trainingForm').reset();
+            document.getElementById('editId').value = '';
+            document.getElementById('addModal').classList.add('active');
+        }
+
+        function editTraining(id) {
+            const trainings = getTrainings();
+            const training = trainings.find(t => t.id === id);
+            if (training) {
+                document.getElementById('modalTitle').textContent = 'Edit Training Program';
+                document.getElementById('editId').value = id;
+                document.getElementById('name').value = training.name;
+                document.getElementById('theme').value = training.theme;
+                document.getElementById('state').value = training.state;
+                document.getElementById('startDate').value = training.startDate;
+                document.getElementById('endDate').value = training.endDate;
+                document.getElementById('status').value = training.status;
+                document.getElementById('participants').value = training.participants;
+                document.getElementById('addModal').classList.add('active');
+            }
+        }
+
+        function closeModal() {
+            document.getElementById('addModal').classList.remove('active');
+        }
+
+        function saveTraining() {
+            const editId = document.getElementById('editId').value;
+            const trainingData = {
+                name: document.getElementById('name').value,
+                theme: document.getElementById('theme').value,
+                state: document.getElementById('state').value,
+                startDate: document.getElementById('startDate').value,
+                endDate: document.getElementById('endDate').value,
+                status: document.getElementById('status').value,
+                participants: parseInt(document.getElementById('participants').value)
+            };
+
+            if (editId) {
+                updateTraining(editId, trainingData);
+                showNotification('Training updated successfully!');
+            } else {
+                addTraining(trainingData);
+                showNotification('Training added successfully!');
+            }
+
+            closeModal();
+            loadTrainings();
+        }
+
+        function deleteTrainingItem(id) {
+            if (confirm('Are you sure you want to delete this training program?')) {
+                deleteTraining(id);
+                showNotification('Training deleted successfully!');
+                loadTrainings();
+            }
+        }
+
+        document.getElementById('searchInput').addEventListener('input', (e) => {
+            const searchTerm = e.target.value.toLowerCase();
+            const rows = document.querySelectorAll('#trainingsTable tr');
+            rows.forEach(row => {
+                const text = row.textContent.toLowerCase();
+                row.style.display = text.includes(searchTerm) ? '' : 'none';
+            });
+        });
+
+        loadTrainings();
+        })();
+    </script>
+</body>
+</html>
