@@ -72,7 +72,8 @@ async function login(email, password) {
     }
 }
 
-async function logout() {
+// FIX: Make logout function globally accessible
+window.logout = async function() {
     if (supabaseClient) {
         await supabaseClient.auth.signOut();
     }
