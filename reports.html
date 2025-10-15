@@ -4,183 +4,210 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Reports - Aapda-Prashikshan</title>
+    <!-- Tailwind CSS -->
     <script src="https://cdn.tailwindcss.com"></script>
+    <!-- Google Fonts & Icons -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined" rel="stylesheet" />
+    <!-- JS Libraries -->
     <script src="https://cdn.jsdelivr.net/npm/gsap@3.12.5/dist/gsap.min.js"></script>
-    <link rel="stylesheet" href="assets/css/main.css">
+    <!-- PDF Export Libraries -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf-autotable/3.5.23/jspdf.plugin.autotable.min.js"></script>
+
+    <style>
+        body {
+            font-family: 'Inter', sans-serif;
+        }
+        /* Custom scrollbar */
+        ::-webkit-scrollbar { width: 8px; height: 8px; }
+        ::-webkit-scrollbar-track { background: #f1f5f9; }
+        ::-webkit-scrollbar-thumb { background: #cbd5e1; border-radius: 10px; }
+        ::-webkit-scrollbar-thumb:hover { background: #94a3b8; }
+    </style>
 </head>
-<body>
-    <div class="header">
-        <div class="header-left">
-            <div class="logo-container">
-                <div class="logo">🇮🇳</div>
+<body class="bg-slate-100">
+
+    <div class="flex h-screen bg-slate-100">
+        <!-- Sidebar -->
+        <aside id="sidebar" class="w-64 bg-white shadow-md fixed inset-y-0 left-0 transform -translate-x-full md:relative md:translate-x-0 transition-transform duration-300 ease-in-out z-30">
+            <div class="flex items-center justify-center p-4 border-b">
+                 <div class="text-indigo-600">
+                    <svg class="w-10 h-10" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor"><path d="M12 2L3 8v11a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2V8l-9-6zm0 2.5l7 4.66V19H5V9.16L12 4.5zM12 10a4 4 0 1 1 0 8 4 4 0 0 1 0-8zm0 2a2 2 0 1 0 0 4 2 2 0 0 0 0-4z"/></svg>
+                </div>
+                <div class="ml-3">
+                    <h1 class="text-xl font-bold text-slate-800">Aapda-Prashikshan</h1>
+                    <p class="text-xs text-slate-500">NDMA Portal</p>
+                </div>
+            </div>
+            <nav class="mt-4">
+                <a href="dashboard.html" class="flex items-center px-6 py-3 text-slate-600 hover:bg-slate-50 hover:text-indigo-600">
+                    <span class="material-symbols-outlined">dashboard</span>
+                    <span class="ml-4">Dashboard</span>
+                </a>
+                <a href="trainings.html" class="flex items-center px-6 py-3 text-slate-600 hover:bg-slate-50 hover:text-indigo-600">
+                    <span class="material-symbols-outlined">school</span>
+                    <span class="ml-4">Trainings</span>
+                </a>
+                <a href="participants.html" class="flex items-center px-6 py-3 text-slate-600 hover:bg-slate-50 hover:text-indigo-600">
+                    <span class="material-symbols-outlined">groups</span>
+                    <span class="ml-4">Participants</span>
+                </a>
+                <a href="reports.html" class="flex items-center px-6 py-3 text-indigo-600 bg-indigo-50 border-r-4 border-indigo-500">
+                    <span class="material-symbols-outlined">monitoring</span>
+                    <span class="ml-4 font-semibold">Reports</span>
+                </a>
+            </nav>
+        </aside>
+
+        <div class="flex-1 flex flex-col overflow-hidden">
+            <!-- Header -->
+            <header class="flex items-center justify-between p-4 bg-white border-b shadow-sm">
                 <div>
-                    <div class="app-title">Aapda-Prashikshan</div>
-                    <div class="app-subtitle">NDMA | Ministry of Home Affairs</div>
-                </div>
-            </div>
-        </div>
-        <div class="header-right">
-            <div class="user-info">
-                <div class="user-avatar" id="userAvatar">A</div>
-                <div class="user-details">
-                    <div class="user-name" id="userName">Admin User</div>
-                    <div class="user-role" id="userRole">Administrator</div>
-                </div>
-            </div>
-            <button onclick="logout()" class="btn btn-secondary">Logout</button>
-        </div>
-    </div>
-
-    <div class="sidebar">
-        <a href="dashboard.html" class="nav-link">
-            <span class="nav-icon">📊</span>
-            Dashboard
-        </a>
-        <a href="trainings.html" class="nav-link">
-            <span class="nav-icon">🎓</span>
-            Training Management
-        </a>
-        <a href="participants.html" class="nav-link">
-            <span class="nav-icon">👥</span>
-            Participant Registry
-        </a>
-        <a href="reports.html" class="nav-link active">
-            <span class="nav-icon">📈</span>
-            Reports
-        </a>
-    </div>
-
-    <div class="main-content">
-        <div class="page-header">
-            <h1 class="page-title">Report Generation</h1>
-            <p class="page-subtitle">Generate comprehensive reports on training activities and participant data</p>
-        </div>
-
-        <div class="card" style="margin-bottom: 1.5rem;">
-            <div class="card-header">
-                <h3 class="card-title">Configure Report Parameters</h3>
-            </div>
-            <div class="card-body">
-                <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(250px, 1fr)); gap: 1rem;">
-                    <div class="form-group">
-                        <label class="form-label">Report Type</label>
-                        <select id="reportType" class="form-select">
-                            <option value="trainings">Training Programs Report</option>
-                            <option value="participants">Participants Report</option>
-                            <option value="state">State-wise Summary</option>
-                            <option value="theme">Theme-wise Analysis</option>
-                        </select>
-                    </div>
-                    
-                    <div class="form-group">
-                        <label class="form-label">Start Date</label>
-                        <input type="date" id="startDate" class="form-input">
-                    </div>
-                    
-                    <div class="form-group">
-                        <label class="form-label">End Date</label>
-                        <input type="date" id="endDate" class="form-input">
-                    </div>
-                    
-                    <div class="form-group">
-                        <label class="form-label">State/UT</label>
-                        <select id="stateFilter" class="form-select">
-                            <option value="">All States</option>
-                        </select>
-                    </div>
-                    
-                    <div class="form-group">
-                        <label class="form-label">Training Theme</label>
-                        <select id="themeFilter" class="form-select">
-                            <option value="">All Themes</option>
-                        </select>
-                    </div>
-                </div>
-                
-                <div style="margin-top: 1.5rem; display: flex; gap: 1rem;">
-                    <button onclick="generateReport()" class="btn btn-primary">
-                        📊 Generate Report
+                    <button id="hamburger-button" class="md:hidden text-slate-600 focus:outline-none">
+                        <span class="material-symbols-outlined">menu</span>
                     </button>
-                    <button onclick="exportReport('csv')" class="btn btn-success">
-                        📥 Download CSV
-                    </button>
-                    <button onclick="exportReport('pdf')" class="btn btn-secondary">
-                        📄 Download PDF
-                    </button>
+                    <h1 class="text-xl font-semibold text-slate-800 hidden md:block">Report Generation</h1>
                 </div>
-            </div>
-        </div>
-
-        <div class="card" id="reportCard" style="display: none;">
-            <div class="card-header">
-                <h3 class="card-title">Generated Report</h3>
-                <span class="badge badge-info" id="reportCount">0 records</span>
-            </div>
-            <div class="card-body">
-                <div class="table-container">
-                    <table id="reportTable">
-                        <thead id="reportTableHead">
-                        </thead>
-                        <tbody id="reportTableBody">
-                        </tbody>
-                    </table>
-                </div>
-            </div>
-        </div>
-
-        <div class="card">
-            <div class="card-header">
-                <h3 class="card-title">Report History</h3>
-            </div>
-            <div class="card-body">
-                <div id="reportHistory" style="display: flex; flex-direction: column; gap: 1rem;">
-                    <div style="padding: 1rem; background: var(--bg-light); border-radius: 0.5rem; display: flex; align-items: center; justify-content: space-between;">
+                <div class="flex items-center space-x-4">
+                    <div class="flex items-center text-right">
                         <div>
-                            <div style="font-weight: 600; margin-bottom: 0.25rem;">Training Programs Report - Q4 2025</div>
-                            <div style="font-size: 0.875rem; color: var(--text-grey);">Generated on October 14, 2025</div>
+                            <p class="font-semibold text-sm text-slate-800" id="userName">Admin User</p>
+                            <p class="text-xs text-slate-500" id="userRole">Administrator</p>
                         </div>
-                        <button class="btn btn-outline">Download</button>
+                         <div class="ml-3 w-10 h-10 rounded-full bg-indigo-500 text-white flex items-center justify-center font-bold" id="userAvatar">A</div>
                     </div>
-                    <div style="padding: 1rem; background: var(--bg-light); border-radius: 0.5rem; display: flex; align-items: center; justify-content: space-between;">
+                    <button onclick="logout()" class="text-slate-500 hover:text-indigo-600">
+                        <span class="material-symbols-outlined">logout</span>
+                    </button>
+                </div>
+            </header>
+
+            <!-- Main Content -->
+            <main class="flex-1 overflow-x-hidden overflow-y-auto p-4 md:p-8">
+                <div class="page-header mb-8">
+                    <h1 class="page-title text-3xl font-bold text-slate-800">Generate Reports</h1>
+                    <p class="page-subtitle text-slate-500 mt-1">Create and export comprehensive reports on training activities.</p>
+                </div>
+
+                <!-- Report Configuration -->
+                <div class="bg-white p-6 rounded-xl shadow-md mb-8">
+                    <h3 class="text-lg font-semibold text-slate-800 mb-4 border-b pb-3">Configure Report Parameters</h3>
+                    <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 mt-4">
                         <div>
-                            <div style="font-weight: 600; margin-bottom: 0.25rem;">State-wise Summary - All India</div>
-                            <div style="font-size: 0.875rem; color: var(--text-grey);">Generated on October 10, 2025</div>
+                            <label class="block text-sm font-medium text-slate-700 mb-1">Report Type</label>
+                            <select id="reportType" class="w-full px-3 py-2 border border-slate-300 rounded-lg focus:ring-2 focus:ring-indigo-500 focus:border-transparent transition">
+                                <option value="trainings">Training Programs</option>
+                                <option value="participants">Participants</option>
+                                <option value="state">State-wise Summary</option>
+                                <option value="theme">Theme-wise Analysis</option>
+                            </select>
                         </div>
-                        <button class="btn btn-outline">Download</button>
+                        <div>
+                            <label class="block text-sm font-medium text-slate-700 mb-1">Start Date</label>
+                            <input type="date" id="startDate" class="w-full px-3 py-2 border border-slate-300 rounded-lg">
+                        </div>
+                        <div>
+                            <label class="block text-sm font-medium text-slate-700 mb-1">End Date</label>
+                            <input type="date" id="endDate" class="w-full px-3 py-2 border border-slate-300 rounded-lg">
+                        </div>
+                        <div>
+                            <label class="block text-sm font-medium text-slate-700 mb-1">State/UT</label>
+                            <select id="stateFilter" class="w-full px-3 py-2 border border-slate-300 rounded-lg">
+                                <option value="">All States</option>
+                            </select>
+                        </div>
+                        <div class="lg:col-span-2">
+                            <label class="block text-sm font-medium text-slate-700 mb-1">Training Theme</label>
+                            <select id="themeFilter" class="w-full px-3 py-2 border border-slate-300 rounded-lg">
+                                <option value="">All Themes</option>
+                            </select>
+                        </div>
+                    </div>
+                    <div class="mt-6 flex flex-col md:flex-row gap-4">
+                        <button onclick="generateReport()" class="w-full md:w-auto bg-indigo-600 text-white font-semibold py-2 px-6 rounded-lg hover:bg-indigo-700 transition duration-200 flex items-center justify-center gap-2">
+                            <span class="material-symbols-outlined">summarize</span>
+                            Generate Report
+                        </button>
+                        <button onclick="exportReport('csv')" class="w-full md:w-auto bg-green-600 text-white font-semibold py-2 px-6 rounded-lg hover:bg-green-700 transition duration-200 flex items-center justify-center gap-2">
+                            <span class="material-symbols-outlined">download</span>
+                            Download CSV
+                        </button>
+                         <button onclick="exportReport('pdf')" class="w-full md:w-auto bg-red-600 text-white font-semibold py-2 px-6 rounded-lg hover:bg-red-700 transition duration-200 flex items-center justify-center gap-2">
+                            <span class="material-symbols-outlined">picture_as_pdf</span>
+                            Download PDF
+                        </button>
                     </div>
                 </div>
-            </div>
+
+                <!-- Report Results -->
+                <div id="reportCard" class="bg-white rounded-xl shadow-md overflow-hidden hidden">
+                    <div class="p-6 border-b flex justify-between items-center">
+                        <h3 class="card-title text-lg font-semibold text-slate-800" id="reportTitle">Generated Report</h3>
+                        <span class="bg-indigo-100 text-indigo-800 text-sm font-medium px-3 py-1 rounded-full" id="reportCount">0 records</span>
+                    </div>
+                    <div class="overflow-x-auto">
+                        <table id="reportTable" class="w-full text-sm text-left text-slate-500">
+                            <thead id="reportTableHead" class="text-xs text-slate-700 uppercase bg-slate-50"></thead>
+                            <tbody id="reportTableBody"></tbody>
+                        </table>
+                    </div>
+                </div>
+            </main>
         </div>
     </div>
+    
+    <div id="sidebar-overlay" class="fixed inset-0 bg-black bg-opacity-50 z-20 hidden md:hidden"></div>
 
-    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
-    <script src="assets/js/config.js"></script>
-    <script src="assets/js/auth.js"></script>
-    <script src="assets/js/data.js"></script>
-    <script src="assets/js/main.js"></script>
+    <!-- Toast Notification Container -->
+    <div id="toast-container" class="fixed top-6 right-6 z-[100] space-y-3"></div>
+
+    <!-- Scripts -->
+    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2" defer></script>
+    <script src="assets/js/config.js" defer></script>
+    <script src="assets/js/auth.js" defer></script>
+    <script src="assets/js/data.js" defer></script>
+    <script src="assets/js/main.js" defer></script>
     <script>
-        (async () => {
-            await checkAuth();
-
-        const stateFilter = document.getElementById('stateFilter');
-        STATES_UTS.forEach(state => {
-            const option = document.createElement('option');
-            option.value = state;
-            option.textContent = state;
-            stateFilter.appendChild(option);
-        });
-
-        const themeFilter = document.getElementById('themeFilter');
-        TRAINING_THEMES.forEach(theme => {
-            const option = document.createElement('option');
-            option.value = theme;
-            option.textContent = theme;
-            themeFilter.appendChild(option);
-        });
-
+    (() => {
         let currentReportData = [];
+        let currentReportHeaders = [];
+        let currentReportTitle = "Report";
 
-        function generateReport() {
+        window.showNotification = (message, type = 'success') => {
+            const container = document.getElementById('toast-container');
+            if (!container) return;
+
+            const toast = document.createElement('div');
+            const isSuccess = type === 'success';
+            const bgColor = isSuccess ? 'bg-green-50' : 'bg-red-50';
+            const textColor = isSuccess ? 'text-green-800' : 'text-red-800';
+            const iconColor = isSuccess ? 'text-green-500' : 'text-red-500';
+            const iconName = isSuccess ? 'check_circle' : 'error';
+            toast.className = `relative flex items-start gap-3 w-80 max-w-sm p-4 rounded-lg shadow-lg ${bgColor} ${textColor} overflow-hidden`;
+            toast.innerHTML = `
+                <span class="material-symbols-outlined ${iconColor}">${iconName}</span>
+                <div class="flex-1">
+                    <p class="font-semibold text-sm">${isSuccess ? 'Success' : 'Error'}</p>
+                    <p class="text-sm">${message}</p>
+                </div>
+                <button class="absolute top-2 right-2 text-slate-500 hover:text-slate-800">&times;</button>
+            `;
+            container.appendChild(toast);
+            const closeToast = () => {
+                gsap.to(toast, {
+                    opacity: 0, x: 50, duration: 0.3, ease: 'power2.in',
+                    onComplete: () => toast.remove()
+                });
+            };
+            toast.querySelector('button').addEventListener('click', closeToast);
+            gsap.from(toast, { opacity: 0, x: 100, duration: 0.5, ease: 'power3.out' });
+            setTimeout(() => { if (toast.parentElement) closeToast(); }, 4000);
+        };
+
+        window.generateReport = () => {
             const reportType = document.getElementById('reportType').value;
             const startDate = document.getElementById('startDate').value;
             const endDate = document.getElementById('endDate').value;
@@ -190,108 +217,167 @@
             let data = [];
             const tableHead = document.getElementById('reportTableHead');
             const tableBody = document.getElementById('reportTableBody');
+            const reportTitleEl = document.getElementById('reportTitle');
+            
+            // First, filter the base data
+            const baseTrainings = getTrainings().filter(t => {
+                const matchDate = (!startDate || t.startDate >= startDate) && (!endDate || t.endDate <= endDate);
+                const matchState = !state || t.state === state;
+                const matchTheme = !theme || t.theme === theme;
+                return matchDate && matchState && matchTheme;
+            });
+            
+            tableBody.innerHTML = ''; // Clear previous results
 
             if (reportType === 'trainings') {
-                data = getTrainings().filter(t => {
-                    const matchDate = (!startDate || t.startDate >= startDate) && (!endDate || t.endDate <= endDate);
-                    const matchState = !state || t.state === state;
-                    const matchTheme = !theme || t.theme === theme;
-                    return matchDate && matchState && matchTheme;
-                });
-
-                tableHead.innerHTML = `
-                    <tr>
-                        <th>Program ID</th>
-                        <th>Program Name</th>
-                        <th>Theme</th>
-                        <th>State/UT</th>
-                        <th>Start Date</th>
-                        <th>End Date</th>
-                        <th>Status</th>
-                        <th>Participants</th>
-                    </tr>
-                `;
-
-                tableBody.innerHTML = '';
-                data.forEach(training => {
-                    const row = document.createElement('tr');
-                    const statusClass = training.status === 'Active' ? 'badge-success' : 
-                                      training.status === 'Upcoming' ? 'badge-info' : 'badge-warning';
+                data = baseTrainings;
+                currentReportTitle = "Training Programs Report";
+                currentReportHeaders = ['ID', 'Name', 'Theme', 'State', 'Start Date', 'Status', 'Participants'];
+                tableHead.innerHTML = `<tr>${currentReportHeaders.map(h => `<th class="px-6 py-3">${h}</th>`).join('')}</tr>`;
+                data.forEach(t => {
+                    const row = tableBody.insertRow();
+                    row.className = 'bg-white border-b hover:bg-slate-50';
                     row.innerHTML = `
-                        <td>${training.id}</td>
-                        <td>${training.name}</td>
-                        <td>${training.theme}</td>
-                        <td>${training.state}</td>
-                        <td>${formatDate(training.startDate)}</td>
-                        <td>${formatDate(training.endDate)}</td>
-                        <td><span class="badge ${statusClass}">${training.status}</span></td>
-                        <td>${training.participants}</td>
+                        <td class="px-6 py-4">${t.id}</td>
+                        <td class="px-6 py-4 font-medium text-slate-900">${t.name}</td>
+                        <td class="px-6 py-4">${t.theme}</td>
+                        <td class="px-6 py-4">${t.state}</td>
+                        <td class="px-6 py-4">${formatDate(t.startDate)}</td>
+                        <td class="px-6 py-4">${t.status}</td>
+                        <td class="px-6 py-4">${t.participants}</td>
                     `;
-                    tableBody.appendChild(row);
                 });
+
             } else if (reportType === 'participants') {
-                data = getParticipants().filter(p => {
-                    const matchState = !state || p.state === state;
-                    return matchState;
-                });
-
-                tableHead.innerHTML = `
-                    <tr>
-                        <th>Participant ID</th>
-                        <th>Name</th>
-                        <th>State/UT</th>
-                        <th>Primary Skill</th>
-                        <th>Last Training</th>
-                        <th>Certification Status</th>
-                    </tr>
-                `;
-
-                tableBody.innerHTML = '';
-                data.forEach(participant => {
-                    const row = document.createElement('tr');
-                    const statusClass = participant.certificationStatus === 'Certified' ? 'badge-success' : 
-                                      participant.certificationStatus === 'Pending' ? 'badge-warning' : 'badge-danger';
+                data = getParticipants().filter(p => !state || p.state === state);
+                currentReportTitle = "Participants Report";
+                currentReportHeaders = ['ID', 'Name', 'State', 'Skill', 'Certification'];
+                tableHead.innerHTML = `<tr>${currentReportHeaders.map(h => `<th class="px-6 py-3">${h}</th>`).join('')}</tr>`;
+                data.forEach(p => {
+                    const row = tableBody.insertRow();
+                    row.className = 'bg-white border-b hover:bg-slate-50';
                     row.innerHTML = `
-                        <td>${participant.id}</td>
-                        <td>${participant.name}</td>
-                        <td>${participant.state}</td>
-                        <td>${participant.skill}</td>
-                        <td>${participant.lastTraining || 'N/A'}</td>
-                        <td><span class="badge ${statusClass}">${participant.certificationStatus}</span></td>
+                        <td class="px-6 py-4">${p.id}</td>
+                        <td class="px-6 py-4 font-medium text-slate-900">${p.name}</td>
+                        <td class="px-6 py-4">${p.state}</td>
+                        <td class="px-6 py-4">${p.skill}</td>
+                        <td class="px-6 py-4">${p.certificationStatus}</td>
                     `;
-                    tableBody.appendChild(row);
+                });
+            } else if (reportType === 'state') {
+                const summary = baseTrainings.reduce((acc, t) => {
+                    if (!acc[t.state]) {
+                        acc[t.state] = { totalTrainings: 0, totalParticipants: 0 };
+                    }
+                    acc[t.state].totalTrainings += 1;
+                    acc[t.state].totalParticipants += t.participants;
+                    return acc;
+                }, {});
+                data = Object.entries(summary).map(([state, values]) => ({ state, ...values }));
+                currentReportTitle = "State-wise Summary Report";
+                currentReportHeaders = ['State/UT', 'Total Trainings', 'Total Participants'];
+                tableHead.innerHTML = `<tr>${currentReportHeaders.map(h => `<th class="px-6 py-3">${h}</th>`).join('')}</tr>`;
+                data.forEach(s => {
+                    const row = tableBody.insertRow();
+                    row.className = 'bg-white border-b hover:bg-slate-50';
+                    row.innerHTML = `
+                        <td class="px-6 py-4 font-medium text-slate-900">${s.state}</td>
+                        <td class="px-6 py-4">${s.totalTrainings}</td>
+                        <td class="px-6 py-4">${s.totalParticipants}</td>
+                    `;
+                });
+            } else if (reportType === 'theme') {
+                 const summary = baseTrainings.reduce((acc, t) => {
+                    if (!acc[t.theme]) {
+                        acc[t.theme] = { totalTrainings: 0, totalParticipants: 0 };
+                    }
+                    acc[t.theme].totalTrainings += 1;
+                    acc[t.theme].totalParticipants += t.participants;
+                    return acc;
+                }, {});
+                data = Object.entries(summary).map(([theme, values]) => ({ theme, ...values }));
+                currentReportTitle = "Theme-wise Analysis Report";
+                currentReportHeaders = ['Training Theme', 'Total Trainings', 'Total Participants'];
+                tableHead.innerHTML = `<tr>${currentReportHeaders.map(h => `<th class="px-6 py-3">${h}</th>`).join('')}</tr>`;
+                data.forEach(t => {
+                    const row = tableBody.insertRow();
+                    row.className = 'bg-white border-b hover:bg-slate-50';
+                    row.innerHTML = `
+                        <td class="px-6 py-4 font-medium text-slate-900">${t.theme}</td>
+                        <td class="px-6 py-4">${t.totalTrainings}</td>
+                        <td class="px-6 py-4">${t.totalParticipants}</td>
+                    `;
                 });
             }
 
+
             currentReportData = data;
-            document.getElementById('reportCount').textContent = `${data.length} records`;
-            document.getElementById('reportCard').style.display = 'block';
+            reportTitleEl.textContent = currentReportTitle;
+            document.getElementById('reportCount').textContent = `${data.length} records found`;
+            const reportCard = document.getElementById('reportCard');
+            reportCard.classList.remove('hidden');
 
-            gsap.from('#reportCard', {
-                opacity: 0,
-                y: 20,
-                duration: 0.5
-            });
-
+            gsap.from(reportCard, { opacity: 0, y: 20, duration: 0.5 });
             showNotification('Report generated successfully!');
         }
 
-        function exportReport(format) {
+        window.exportReport = (format) => {
             if (currentReportData.length === 0) {
-                alert('Please generate a report first');
+                showNotification('Please generate a report first.', 'error');
                 return;
             }
-
+            const filename = `${document.getElementById('reportType').value}_report_${new Date().toISOString().split('T')[0]}`;
             if (format === 'csv') {
-                const reportType = document.getElementById('reportType').value;
-                const filename = `${reportType}_report_${new Date().toISOString().split('T')[0]}.csv`;
-                exportToCSV(currentReportData, filename);
-                showNotification('Report exported to CSV successfully!');
+                exportToCSV(currentReportData, `${filename}.csv`);
+                showNotification('CSV export complete!');
             } else if (format === 'pdf') {
-                exportToPDF('reportTable', 'report.pdf');
+                const { jsPDF } = window.jspdf;
+                const doc = new jsPDF();
+                doc.autoTable({
+                    head: [currentReportHeaders],
+                    body: currentReportData.map(row => Object.values(row)),
+                    didDrawPage: function(data) {
+                        doc.setFontSize(20);
+                        doc.text(currentReportTitle, data.settings.margin.left, 15);
+                    }
+                });
+                doc.save(`${filename}.pdf`);
+                showNotification('PDF export complete!');
             }
         }
-        })();
+
+        document.addEventListener('DOMContentLoaded', async () => {
+            await checkAuth();
+
+            const sidebar = document.getElementById('sidebar');
+            const hamburgerButton = document.getElementById('hamburger-button');
+            const sidebarOverlay = document.getElementById('sidebar-overlay');
+            const toggleSidebar = () => {
+                sidebar.classList.toggle('-translate-x-full');
+                sidebarOverlay.classList.toggle('hidden');
+            };
+            hamburgerButton.addEventListener('click', toggleSidebar);
+            sidebarOverlay.addEventListener('click', toggleSidebar);
+            
+            const stateFilter = document.getElementById('stateFilter');
+            STATES_UTS.forEach(state => {
+                const option = document.createElement('option');
+                option.value = state;
+                option.textContent = state;
+                stateFilter.appendChild(option);
+            });
+
+            const themeFilter = document.getElementById('themeFilter');
+            TRAINING_THEMES.forEach(theme => {
+                const option = document.createElement('option');
+                option.value = theme;
+                option.textContent = theme;
+                themeFilter.appendChild(option);
+            });
+            updateUserInfo();
+        });
+    })();
     </script>
 </body>
 </html>
+

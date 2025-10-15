@@ -3,12 +3,284 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Redirecting...</title>
+    <title>Aapda-Prashikshan | NDMA</title>
+    <!-- Tailwind CSS -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <!-- Google Fonts: Public Sans & Material Symbols -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Public+Sans:wght@400;500;700;900&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined" rel="stylesheet" />
+    <!-- GSAP Animation Library -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.11.4/gsap.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.11.4/ScrollTrigger.min.js"></script>
+
     <script>
-        window.location.href = 'login.html';
+        // Configure Tailwind
+        tailwind.config = {
+            theme: {
+                extend: {},
+            },
+        };
     </script>
+
+    <style>
+        /* Custom Styles */
+        html {
+            scroll-behavior: smooth;
+        }
+        body {
+            font-family: 'Public Sans', sans-serif;
+            opacity: 0; /* Initially hide body to prevent FOUC, GSAP will fade it in */
+            @apply bg-slate-50 text-slate-800 transition-colors duration-300;
+        }
+        .hero-bg {
+            background-image: url('https://images.unsplash.com/photo-1516975069153-a930739c9f45?q=80&w=2070&auto=format&fit=crop&ixlib=rb-4.0.3');
+            background-size: cover;
+            background-position: center;
+        }
+        .text-primary { color: #007BFF; }
+        .bg-primary { background-color: #007BFF; }
+        .bg-primary-hover:hover { background-color: #0056b3; }
+        .ring-primary { --tw-ring-color: #007BFF; }
+        .border-primary { border-color: #007BFF; }
+        /* Mobile menu transition */
+        #mobile-menu {
+            transition: transform 0.3s ease-in-out;
+        }
+        /* Card hover effect */
+        .challenge-card {
+            transition: transform 0.3s ease-in-out, box-shadow 0.3s ease-in-out;
+        }
+        .challenge-card:hover {
+            transform: translateY(-8px) scale(1.02);
+            @apply shadow-xl;
+        }
+    </style>
 </head>
 <body>
-    <p>Redirecting to login page...</p>
+    <div class="flex flex-col min-h-screen">
+        <!-- Header -->
+        <header class="sticky top-0 z-50 bg-white/80 backdrop-blur-sm border-b border-slate-200">
+            <div class="container mx-auto px-4 sm:px-6 lg:px-8">
+                <div class="flex items-center justify-between h-20">
+                    <div class="flex items-center gap-4">
+                        <div class="text-primary">
+                            <svg class="w-10 h-10" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor"><path d="M12 2L3 8v11a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2V8l-9-6zm0 2.5l7 4.66V19H5V9.16L12 4.5zM12 10a4 4 0 1 1 0 8 4 4 0 0 1 0-8zm0 2a2 2 0 1 0 0 4 2 2 0 0 0 0-4z"/></svg>
+                        </div>
+                        <h1 class="text-2xl font-bold text-slate-900">
+                            Aapda-Prashikshan
+                        </h1>
+                    </div>
+                    <nav class="hidden md:flex items-center gap-8">
+                        <a class="text-slate-600 hover:text-primary font-medium" href="#overview">Overview</a>
+                        <a class="text-slate-600 hover:text-primary font-medium" href="#challenges">Challenges</a>
+                        <a class="text-slate-600 hover:text-primary font-medium" href="#solution">Solution</a>
+                    </nav>
+                    <div class="flex items-center gap-4">
+                        <a href="login.html" class="hidden sm:inline-block bg-primary text-white font-bold py-2 px-6 rounded-lg text-base hover:bg-primary-hover transition-colors">
+                            Go to Dashboard
+                        </a>
+                        <button id="hamburger-button" class="md:hidden flex items-center justify-center h-10 w-10 rounded-full text-slate-600 hover:bg-primary/10 focus:outline-none z-50">
+                            <span class="material-symbols-outlined">menu</span>
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </header>
+
+        <!-- Mobile Menu -->
+        <div id="mobile-menu" class="fixed top-0 right-0 h-full w-64 bg-white shadow-lg p-6 transform translate-x-full z-40 md:hidden">
+            <nav class="flex flex-col gap-6 pt-20">
+                <a class="text-slate-600 hover:text-primary font-medium text-lg" href="#overview">Overview</a>
+                <a class="text-slate-600 hover:text-primary font-medium text-lg" href="#challenges">Challenges</a>
+                <a class="text-slate-600 hover:text-primary font-medium text-lg" href="#solution">Solution</a>
+                <a href="login.html" class="mt-4 inline-block bg-primary text-white text-center font-bold py-2 px-6 rounded-lg text-base hover:bg-primary-hover transition-colors">
+                    Go to Dashboard
+                </a>
+            </nav>
+        </div>
+
+        <main class="flex-grow">
+            <!-- Hero Section -->
+            <section id="overview" class="relative hero-bg">
+                <div class="absolute inset-0 bg-black/60"></div>
+                <div class="relative container mx-auto px-4 sm:px-6 lg:px-8 py-24 md:py-36">
+                    <div class="max-w-4xl mx-auto text-center">
+                        <h2 id="hero-title" class="text-4xl font-extrabold text-white sm:text-5xl lg:text-6xl">
+                            Real-Time Monitoring for Disaster Management Training
+                        </h2>
+                        <p id="hero-subtitle" class="mt-6 text-lg text-slate-200 max-w-3xl mx-auto">
+                            A unified digital platform to track, analyze, and enhance India's national capacity-building efforts for disaster preparedness, proposed for the NDMA.
+                        </p>
+                        <div id="hero-button" class="mt-10">
+                            <a class="inline-block bg-primary text-white font-bold py-3 px-10 rounded-lg text-lg hover:bg-primary-hover transition-colors" href="login.html">
+                                Launch Monitoring System
+                            </a>
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            <!-- Core Challenges Section -->
+            <section id="challenges" class="py-16 sm:py-24">
+                <div class="container mx-auto px-4 sm:px-6 lg:px-8">
+                    <div class="text-center max-w-3xl mx-auto">
+                        <h3 class="text-3xl font-bold text-slate-900 sm:text-4xl">
+                            Core Challenges in Preparedness
+                        </h3>
+                        <p class="mt-4 text-lg text-slate-600">
+                            Despite large-scale efforts, a significant operational gap exists due to the lack of a unified digital system.
+                        </p>
+                    </div>
+                    <div class="grid grid-cols-1 md:grid-cols-3 gap-8 mt-12">
+                        <!-- Challenge Card 1 -->
+                        <div class="challenge-card text-center p-8 rounded-xl bg-white shadow-lg border border-slate-100">
+                            <div class="mx-auto flex items-center justify-center h-16 w-16 rounded-full bg-primary/10 text-primary">
+                                <span class="material-symbols-outlined text-4xl">folder_zip</span>
+                            </div>
+                            <h4 class="mt-6 text-xl font-bold text-slate-900">Fragmented Data</h4>
+                            <p class="mt-2 text-slate-600">Training data is scattered across numerous partners, leading to inconsistent reporting and data silos.</p>
+                        </div>
+                        <!-- Challenge Card 2 -->
+                        <div class="challenge-card text-center p-8 rounded-xl bg-white shadow-lg border border-slate-100">
+                            <div class="mx-auto flex items-center justify-center h-16 w-16 rounded-full bg-primary/10 text-primary">
+                                <span class="material-symbols-outlined text-4xl">hourglass_disabled</span>
+                            </div>
+                            <h4 class="mt-6 text-xl font-bold text-slate-900">Lack of Real-Time Insight</h4>
+                            <p class="mt-2 text-slate-600">No centralized platform to track training activities as they happen, causing delays in data aggregation.</p>
+                        </div>
+                        <!-- Challenge Card 3 -->
+                        <div class="challenge-card text-center p-8 rounded-xl bg-white shadow-lg border border-slate-100">
+                            <div class="mx-auto flex items-center justify-center h-16 w-16 rounded-full bg-primary/10 text-primary">
+                                <span class="material-symbols-outlined text-4xl">policy</span>
+                            </div>
+                            <h4 class="mt-6 text-xl font-bold text-slate-900">Ineffective Impact Assessment</h4>
+                            <p class="mt-2 text-slate-600">Inconsistent data makes it difficult to assess the reach, effectiveness, and overall impact of training programs.</p>
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            <!-- The Solution Section -->
+            <section id="solution" class="py-16 sm:py-24 bg-white">
+                <div class="container mx-auto px-4 sm:px-6 lg:px-8">
+                     <div class="text-center max-w-3xl mx-auto">
+                        <h3 class="text-3xl font-bold text-slate-900 sm:text-4xl">
+                            A Unified Digital Platform
+                        </h3>
+                        <p class="mt-4 text-lg text-slate-600">
+                            A robust, user-friendly, and centralized web application to serve as the single source of truth for all disaster management training in India.
+                        </p>
+                    </div>
+                    <div class="flex flex-col gap-12 items-center mt-12">
+                        <!-- Solution Table -->
+                        <div class="solution-content w-full max-w-4xl bg-slate-50 border border-slate-200 rounded-xl p-8">
+                            <div class="space-y-6">
+                                <div class="grid grid-cols-3 gap-4 pb-4 border-b border-slate-200">
+                                    <h5 class="font-bold text-slate-800 col-span-1">Feature</h5>
+                                    <p class="text-slate-600 col-span-2 font-semibold">Description</p>
+                                </div>
+                                <div class="grid grid-cols-3 gap-4 items-center">
+                                    <h5 class="font-semibold text-slate-800 col-span-1 flex items-center gap-2">
+                                        <span class="material-symbols-outlined text-primary">database</span>
+                                        Data Portal
+                                    </h5>
+                                    <p class="text-slate-600 col-span-2">Secure interface for partner agencies (SDMAs, ATIs, NGOs) to input standardized training data in real-time.</p>
+                                </div>
+                                <div class="grid grid-cols-3 gap-4 items-center pt-4 border-t border-slate-200">
+                                    <h5 class="font-semibold text-slate-800 col-span-1 flex items-center gap-2">
+                                        <span class="material-symbols-outlined text-primary">map</span>
+                                        GIS View
+                                    </h5>
+                                    <p class="text-slate-600 col-span-2">Interactive map to visualize geographical spread of trainings and identify underserved regions.</p>
+                                </div>
+                                 <div class="grid grid-cols-3 gap-4 items-center pt-4 border-t border-slate-200">
+                                    <h5 class="font-semibold text-slate-800 col-span-1 flex items-center gap-2">
+                                        <span class="material-symbols-outlined text-primary">monitoring</span>
+                                        Analytics
+                                    </h5>
+                                    <p class="text-slate-600 col-span-2">Dynamic dashboards to track key metrics like participant reach, thematic coverage, and performance.</p>
+                                </div>
+                            </div>
+                        </div>
+                         <div class="solution-content flex justify-center w-full max-w-4xl">
+                            <img alt="Illustration of a GIS Dashboard" class="rounded-xl shadow-lg w-full" src="https://placehold.co/600x500/E2E8F0/475569?text=GIS+Dashboard+View" />
+                        </div>
+                    </div>
+                </div>
+            </section>
+        </main>
+
+        <!-- Footer -->
+        <footer class="bg-slate-100 border-t border-slate-200">
+            <div class="container mx-auto px-4 sm:px-6 lg:px-8 py-8">
+                <div class="text-center">
+                    <p class="text-slate-600">
+                        © 2025 National Disaster Management Authority, Government of India.
+                    </p>
+                    <p class="mt-2 text-sm text-slate-500">
+                        This platform provides information for monitoring and analysis of training programs.
+                    </p>
+                </div>
+            </div>
+        </footer>
+    </div>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', () => {
+            gsap.registerPlugin(ScrollTrigger);
+
+            // --- GSAP ANIMATIONS ---
+            gsap.to('body', { duration: 0.5, opacity: 1 });
+
+            gsap.from("#hero-title", { duration: 1, y: 30, opacity: 0, ease: 'power3.out' });
+            gsap.from("#hero-subtitle", { duration: 1, y: 30, opacity: 0, delay: 0.3, ease: 'power3.out' });
+            gsap.from("#hero-button", { duration: 1, y: 30, opacity: 0, delay: 0.6, ease: 'power3.out' });
+
+            gsap.from(".challenge-card", {
+                scrollTrigger: {
+                    trigger: "#challenges",
+                    start: 'top 80%',
+                },
+                duration: 0.8,
+                y: 50,
+                opacity: 0,
+                stagger: 0.2,
+                ease: 'power3.out'
+            });
+
+            gsap.from(".solution-content", {
+                scrollTrigger: {
+                    trigger: "#solution",
+                    start: 'top 80%',
+                },
+                duration: 1,
+                y: 50,
+                opacity: 0,
+                stagger: 0.2,
+                ease: 'power3.out'
+            });
+
+            // --- HAMBURGER MENU LOGIC ---
+            const hamburgerButton = document.getElementById('hamburger-button');
+            const mobileMenu = document.getElementById('mobile-menu');
+            const menuIcon = hamburgerButton.querySelector('.material-symbols-outlined');
+
+            hamburgerButton.addEventListener('click', () => {
+                mobileMenu.classList.toggle('translate-x-full');
+                const isHidden = mobileMenu.classList.contains('translate-x-full');
+                menuIcon.textContent = isHidden ? 'menu' : 'close';
+            });
+
+            mobileMenu.querySelectorAll('a').forEach(link => {
+                link.addEventListener('click', () => {
+                    mobileMenu.classList.add('translate-x-full');
+                    menuIcon.textContent = 'menu';
+                });
+            });
+        });
+    </script>
 </body>
 </html>
+
