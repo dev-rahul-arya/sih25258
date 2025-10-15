@@ -16,6 +16,13 @@
     <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.1/dist/chart.umd.min.js"></script>
     <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" />
     <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
+    
+    <!-- FIX: Moved all scripts to the head and added defer -->
+    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2" defer></script>
+    <script src="assets/js/config.js" defer></script>
+    <script src="assets/js/auth.js" defer></script>
+    <script src="assets/js/data.js" defer></script>
+    <script src="assets/js/main.js" defer></script>
 
     <style>
         body {
@@ -207,15 +214,10 @@
     </div>
     
     <div id="sidebar-overlay" class="fixed inset-0 bg-black bg-opacity-50 z-20 hidden md:hidden"></div>
-    
-    <!-- Application Scripts -->
-    <script src="assets/js/config.js"></script>
-    <script src="assets/js/auth.js"></script>
-    <script src="assets/js/data.js"></script>
-    <script src="assets/js/main.js"></script>
 
     <script>
-        (async () => {
+        // FIX: Wrapped logic in DOMContentLoaded to ensure all deferred scripts have loaded
+        document.addEventListener('DOMContentLoaded', async () => {
             await checkAuth();
 
             // Hamburger menu logic
@@ -427,7 +429,7 @@
             // GSAP Animations
             gsap.from('.stat-card', { opacity: 0, y: 30, stagger: 0.1, duration: 0.5, ease: 'power2.out' });
             gsap.from('.card', { opacity: 0, y: 30, stagger: 0.15, duration: 0.5, delay: 0.2, ease: 'power2.out' });
-        })();
+        });
     </script>
 </body>
 </html>
