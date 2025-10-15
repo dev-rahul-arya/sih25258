@@ -10,6 +10,12 @@ const APP_CONFIG = {
     ministry: 'Ministry of Home Affairs, Government of India'
 };
 
+// FIX: Added the missing USER_ROLES constant to enable admin checks
+const USER_ROLES = {
+    ADMIN: 'admin',
+    USER: 'user'
+};
+
 const STATES_UTS = [
     'Andhra Pradesh', 'Arunachal Pradesh', 'Assam', 'Bihar', 'Chhattisgarh',
     'Goa', 'Gujarat', 'Haryana', 'Himachal Pradesh', 'Jharkhand',
@@ -49,7 +55,3 @@ const SKILL_CATEGORIES = [
     'Community Mobilization'
 ];
 
-const USER_ROLES = {
-    ADMIN: 'admin',
-    USER: 'user'
-};
